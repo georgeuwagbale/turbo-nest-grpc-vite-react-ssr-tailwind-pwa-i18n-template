@@ -305,7 +305,7 @@ export interface CreateUserDto {
 
 export interface User {
   /** using uuid, hence string i.e. @PrimaryGeneratedColumn('uuid') */
-  id: string;
+  id?: string;
   primaryEmailAddress: string;
   firstName: string;
   middleName?: string | undefined;
