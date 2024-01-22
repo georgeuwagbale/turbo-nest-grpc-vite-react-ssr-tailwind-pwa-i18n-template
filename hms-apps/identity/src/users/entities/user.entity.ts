@@ -24,7 +24,8 @@ export class User {
     backupEmailAddress: string;
 
     @Column({ nullable: true })
-    phone: { [key: string]: any } | undefined;
+    // phone: { [key: string]: any } | undefined;
+    phone: string | undefined;
 
     @Column({ default: false })
     isPrimaryEmailAddressVerified: boolean;

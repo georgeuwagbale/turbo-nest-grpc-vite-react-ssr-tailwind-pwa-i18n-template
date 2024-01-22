@@ -76,6 +76,7 @@ export class UsersService {
 
     const userProps: UserProps[] = users.map((user) => ({
       ...user,
+      
       phone: {},
       isPrimaryEmailAddressVerified: false,
       isBackupEmailAddressVerified: false,
@@ -84,12 +85,13 @@ export class UsersService {
     return { users: userProps };
   }
 
-  async findOne(id: string): Promise<User> {
+  async findOne(id: string): Promise<UserProps> {
     // return this.users.find((user) => user.id === id);
     const user = await this.userRepository.findOneBy({id});
 
     const userProps: UserProps = {
       ...user,
+      
       phone: {},
       isPrimaryEmailAddressVerified: false,
       isBackupEmailAddressVerified: false,
@@ -98,7 +100,7 @@ export class UsersService {
     return userProps;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<UserProps> {
     // const userIndex = this.users.findIndex((user) => user.id === id);
     // if (userIndex !== -1) {
     //   this.users[userIndex] = {
@@ -127,7 +129,7 @@ export class UsersService {
     return userProps;
   }
 
-  async remove(id: string): Promise<User> {
+  async remove(id: string): Promise<UserProps> {
     // const userIndex = this.users.findIndex((user) => user.id === id);
     // if (userIndex !== -1) {
     //   return this.users.splice(userIndex)[0];
