@@ -7,9 +7,33 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import { useEffect } from "react";
+import { DEV_MODE } from './global/frontend.settings';
+import { useTranslation } from 'react-i18next';
 
 function App() {
   const baseUrl = "/v1";
+
+  const { i18n } = useTranslation();
+
+  const changeI18nLanguageToClientPreferred = async () => {
+    if (i18n.language != "")
+      await i18n.changeLanguage("en-US");
+  }
+
+  useEffect(() => {
+    //check if assetMap sent in production mode; if not, redirect to a proper ssr endpoint.
+
+    if (!DEV_MODE) {
+      //attempt to change language here to locale
+      changeI18nLanguageToClientPreferred();
+
+      // if (!assetMap) {
+      //   window.location.href = '/web'; //simulate a mouse click
+      // }
+    }
+  })
+
   //create a react query client at the top
   // Create a client
   const queryClient = new QueryClient()
