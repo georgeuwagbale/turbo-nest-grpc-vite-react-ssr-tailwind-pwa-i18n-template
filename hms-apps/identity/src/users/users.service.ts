@@ -71,42 +71,95 @@ export class UsersService {
     return userProps
   }
 
-  findAll(): Users {
-    return { users: this.users };
+  async findAll(): Promise<Users> {
+    const users = await this.userRepository.find();
+
+    const userProps: UserProps[] = users.map((user) => ({
+      ...user,
+      phone: {},
+      isPrimaryEmailAddressVerified: false,
+      isBackupEmailAddressVerified: false,
+    }));
+
+    return { users: userProps };
   }
 
-  findOne(id: string): User {
-    return this.users.find((user) => user.id === id);
+  async findOne(id: string): Promise<User> {
+    // return this.users.find((user) => user.id === id);
+    const user = await this.userRepository.findOneBy({id});
+
+    const userProps: UserProps = {
+      ...user,
+      phone: {},
+      isPrimaryEmailAddressVerified: false,
+      isBackupEmailAddressVerified: false,
+    };
+
+    return userProps;
   }
 
-  update(id: string, updateUserDto: UpdateUserDto): User {
-    const userIndex = this.users.findIndex((user) => user.id === id);
-    if (userIndex !== -1) {
-      this.users[userIndex] = {
-        ...this.users[userIndex],
-        ...updateUserDto,
-      };
-      return this.users[userIndex];
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    // const userIndex = this.users.findIndex((user) => user.id === id);
+    // if (userIndex !== -1) {
+    //   this.users[userIndex] = {
+    //     ...this.users[userIndex],
+    //     ...updateUserDto,
+    //   };
+    //   return this.users[userIndex];
+    // }
+    // throw new NotFoundException(`User not found by id ${id}`);
+
+    const user = await this.userRepository.findOneBy({id});
+    if (!user) {
+      throw new NotFoundException(`User not found by id ${id}`);
     }
-    throw new NotFoundException(`User not found by id ${id}`);
+
+    Object.assign(user, updateUserDto);
+    const newUser = await this.userRepository.save(user);
+
+    const userProps: UserProps = {
+      ...newUser,
+      phone: {},
+      isPrimaryEmailAddressVerified: false,
+      isBackupEmailAddressVerified: false,
+    };
+
+    return userProps;
   }
 
-  remove(id: string) {
-    const userIndex = this.users.findIndex((user) => user.id === id);
-    if (userIndex !== -1) {
-      return this.users.splice(userIndex)[0];
+  async remove(id: string): Promise<User> {
+    // const userIndex = this.users.findIndex((user) => user.id === id);
+    // if (userIndex !== -1) {
+    //   return this.users.splice(userIndex)[0];
+    // }
+    // throw new NotFoundException(`User not found by id ${id}`);
+
+    const user = await this.userRepository.findOneBy({id});
+    if (!user) {
+      throw new NotFoundException(`User not found by id ${id}`);
     }
-    throw new NotFoundException(`User not found by id ${id}`);
+    const removedUser = await this.userRepository.remove(user);
+
+    const userProps: UserProps = {
+      ...removedUser,
+      phone: {},
+      isPrimaryEmailAddressVerified: false,
+      isBackupEmailAddressVerified: false,
+    };
+
+    return userProps;
   }
+
 
   queryUsers(
     paginationDtoStream: Observable<PaginationDto>,
   ): Observable<Users> {
     const subject = new Subject<Users>();
-    const onNext = (paginationDto: PaginationDto) => {
+    const onNext = async (paginationDto: PaginationDto) => {
       const start = paginationDto.page * paginationDto.skip;
       subject.next({
-        users: this.users.slice(start, start + paginationDto.skip),
+        // users: this.users.slice(start, start + paginationDto.skip),
+        users: (await this.findAll()).users.slice(start, start + paginationDto.skip)
       });
     };
 
