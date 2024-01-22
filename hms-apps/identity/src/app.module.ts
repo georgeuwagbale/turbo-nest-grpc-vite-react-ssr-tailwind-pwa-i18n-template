@@ -8,11 +8,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   imports: [TypeOrmModule.forRoot({
     type: 'mysql',
     host: 'localhost',
-    port: 3306,
+    url: 'mysql://root:root@localhost:3303/apoowo',
+    port: 3303,
     username: 'root',
     password: 'root',
-    database: 'hms',
-    synchronize: true,
+    database: 'apoowo',
+    // synchronize: true,
     autoLoadEntities: true
   }),UsersModule],
   controllers: [AppController],

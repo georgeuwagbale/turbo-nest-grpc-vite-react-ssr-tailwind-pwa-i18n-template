@@ -289,7 +289,7 @@ export interface CreateUserDto {
     lastName: string;
 }
 export interface User {
-    id: string;
+    id?: string;
     primaryEmailAddress: string;
     firstName: string;
     middleName?: string | undefined;
