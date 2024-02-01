@@ -116,7 +116,7 @@ export const columns: ColumnDef<User>[] = [
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(user.id)}
+                            onClick={() => navigator.clipboard.writeText(user.id || '')}
                         >
                             Copy user ID
                         </DropdownMenuItem>
@@ -129,8 +129,9 @@ export const columns: ColumnDef<User>[] = [
     },
 ]
 
+import { useState } from 'react';
 export const DisplayUsers:React.FC<Props> = ({data}) => {
-    const [sorting, setSorting] = React.useState<SortingState>([])
+    const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
     )

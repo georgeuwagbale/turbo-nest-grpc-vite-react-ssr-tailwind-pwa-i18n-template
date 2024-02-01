@@ -1,2 +1,4 @@
 node_modules
 .DS_store
+hms-apps/docker-compose.yml
+hms-apps/data
